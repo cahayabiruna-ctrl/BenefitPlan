@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>DVTEAM NP - Benefit Plan</title>
+    
+    <meta name="theme-color" content="#020617">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="/BenefitPlan/manifest.json">
+    <link rel="apple-touch-icon" href="/BenefitPlan/images/apple-touch-icon.png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* (Tidak ada perubahan di bagian style, tetap sama) */
+        body { font-family: 'Inter', sans-serif; background-color: #020617; background-image: radial-gradient(ellipse at top, #1e293b, #020617); color: #cbd5e1; overflow: hidden; }
+        #splash-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; padding: 1.5rem; text-align: center; animation: fadeIn 1s ease-out forwards; position: fixed; top: 0; left: 0; width: 100%; z-index: 100; }
+        .splash-logo { max-width: 300px; width: 100%; height: auto; margin-bottom: 1.5rem; }
+        .splash-title { font-size: 2rem; font-weight: 800; color: #f0f9ff; letter-spacing: -0.025em; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); }
+        .splash-subtitle { font-size: 1rem; color: #94a3b8; margin-top: 0.5rem; max-width: 400px; }
+        .enter-button { margin-top: 2.5rem; background: linear-gradient(to right, #eab308, #f59e0b); color: #1e293b; padding: 0.75rem 2rem; font-weight: 700; border-radius: 0.5rem; box-shadow: 0 4px 20px -1px rgb(234 179 8 / 0.4); transition: all 0.3s ease; }
+        .enter-button:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 7px 25px -1px rgb(234 179 8 / 0.5); }
+        #dashboard-content { display: none; height: 100vh; overflow-y: auto; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse-update { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        .card { background-color: rgba(30, 41, 59, 0.6); border-radius: 0.75rem; border: 1px solid; border-image-source: linear-gradient(to bottom right, #334155, rgba(51, 65, 85, 0)); border-image-slice: 1; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        .action-button { background: linear-gradient(to right, #0ea5e9, #22d3ee); box-shadow: 0 4px 20px -1px rgb(14 165 233 / 0.3); }
+        .action-button:hover { transform: translateY(-2px); box-shadow: 0 7px 25px -1px rgb(14 165 233 / 0.4); }
+        .back-button { background-color: #1e293b; color: #94a3b8; border: 1px solid #334155; }
+        .back-button:hover { background-color: #334155; }
+        .tab-button-wrapper { background-color: #1e293b; padding: 0.25rem; border-radius: 0.5rem; }
+        .tab-button { transition: all 0.2s ease-in-out; border-radius: 0.375rem; color: #94a3b8; }
+        .tab-button.active { background-color: #334155; color: #f1f5f9; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1); }
+        .number-pulse { animation: pulse-update 0.4s ease-out; }
+        #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; pointer-events: none; display: none; }
+    </style>
+</head>
+<body>
+
+    <div id="splash-screen">
+        <img src="/BenefitPlan/images/logo-splash.png" alt="DVTEAM NP Logo" class="splash-logo">
+        <h1 class="splash-title">Raih Potensi Puncak Anda</h1>
+        <p class="splash-subtitle">Selamat datang di Simulator Benefit Plan. Alat bantu eksklusif untuk merancang masa depan dan kesuksesan tim Anda.</p>
+        <button id="enter-button" class="enter-button">MASUK SIMULATOR</button>
+    </div>
+
+    <div id="dashboard-content">
+        <canvas id="confetti-canvas"></canvas>
+        <div class="container mx-auto p-4 md:p-6 max-w-6xl relative z-10">
+            <header class="text-center mb-8">
+                <h1 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight">Dashboard Proyeksi Benefit Plan</h1>
+                <p class="text-slate-400 mt-3 max-w-xl mx-auto text-sm">Alat bantu visual untuk merencanakan strategi dan memaksimalkan potensi pertumbuhan tim Anda.</p>
+            </header>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <div class="lg:col-span-1 space-y-4">
+                     <div class="card p-4">
+                        <div class="space-y-2 px-2">
+                            <div class="flex justify-between items-center text-xs">
+                                <span class="text-slate-400">Bonus Reveral Lv.1 (5%)</span>
+                                <span class="font-semibold text-emerald-400" id="resBonusReveral1"></span>
+                            </div>
+                            <div class="flex justify-between items-center text-xs">
+                                <span class="text-slate-400">Bonus Reveral Lv.2 (2%)</span>
+                                <span class="font-semibold text-emerald-400" id="resBonusReveral2"></span>
+                            </div>
+                            <div class="flex justify-between items-center text-xs">
+                                <span class="text-slate-400">Bonus Tim</span>
+                                <span class="font-semibold text-emerald-400" id="resBonusTim"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card p-5 sticky top-6">
+                        <div class="flex items-center justify-between mb-5">
+                            <div class="space-y-4">
+                                <div class="flex flex-col justify-center">
+                                    <div class="flex items-center space-x-2">
+                                        <div id="anda-label" class="bg-blue-200 text-blue-800 font-bold text-xs px-3 py-1 rounded-full transition-colors duration-300">ANDA</div>
+                                        <div id="crown-icon" class="hidden">
+                                            <span class="text-base">👑</span>
+                                        </div>
+                                    </div>
+                                    <div id="ketua-tim-label" class="text-left mt-1 h-4"></div>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-400 font-medium uppercase tracking-wider">Status & Peringkat</p>
+                                    <div id="kpiStatus" class="mt-1"></div>
+                                    <p class="font-bold text-emerald-400 text-lg" id="kpiBonusPeringkat"></p>
+                                </div>
+                            </div>
+                            <div class="text-right space-y-4">
+                                 <div>
+                                     <p class="text-xs text-slate-400 font-medium uppercase tracking-wider">Total Bonus</p>
+                                     <p class="text-xl font-extrabold text-cyan-400" id="kpiTotalBonus"></p>
+                                 </div>
+                                 <div>
+                                     <p class="text-slate-400 text-xs">Saldo Akun</p>
+                                     <p class="font-bold text-white text-base" id="resModalAwalPanel"></p>
+                                 </div>
+                                 <div>
+                                     <p class="text-slate-400 text-xs">Bonus Volume</p>
+                                     <p class="font-bold text-cyan-400 text-base" id="resBonusVolume"></p>
+                                 </div>
+                            </div>
+                        </div>
+                        <div class="space-y-4 pt-5 border-t border-slate-700" id="controls-body">
+                             </div>
+                    </div>
+                </div>
+                <div class="lg:col-span-2">
+                    <div class="card p-5">
+                        <nav class="tab-button-wrapper grid grid-cols-2 gap-1 mb-5">
+                            <button id="btn-tab-benefit" class="tab-button active py-1.5 px-2 font-semibold text-xs" onclick="switchTab('benefit')">Benefit Anda</button>
+                            <button id="btn-tab-tim" class="tab-button py-1.5 px-2 font-semibold text-xs" onclick="switchTab('tim')">Struktur Tim</button>
+                        </nav>
+                        <div id="tab-content">
+                            <div id="tab-benefit" class="space-y-3">
+                               <div class="bg-slate-800 rounded-lg p-3 flex items-center justify-between transition hover:bg-slate-700">
+                                    <div class="flex items-center">
+                                        <div class="bg-blue-500/20 text-blue-400 p-2 rounded-full mr-3">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
+                                        </div>
+                                        <div>
+                                            <p class="font-semibold text-slate-200 text-sm">Batasan Modal Maksimal</p>
+                                            <p class="text-xs text-slate-400">Batas deposit Anda saat ini.</p>
+                                        </div>
+                                    </div>
+                                    <p class="font-bold text-base text-slate-200" id="resBatasanModal"></p>
+                                </div>
+                                 <div class="bg-slate-800 rounded-lg p-3 transition hover:bg-slate-700">
+                                    <div class="flex items-center mb-3">
+                                         <div class="bg-emerald-500/20 text-emerald-400 p-2 rounded-full mr-3">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" /></svg>
+                                        </div>
+                                        <p class="font-semibold text-slate-200 text-sm">Sinyal Trading Aktif</p>
+                                    </div>
+                                    <div id="resSinyal" class="space-y-2 pl-2 border-l-2 border-slate-700 ml-4 text-sm"></div>
+                                </div>
+                            </div>
+                            <div id="tab-tim" class="hidden">
+                                <div class="flex justify-between items-center py-3 border-b border-slate-700"><span class="text-slate-400 font-bold">Total Anggota Tim</span><span class="font-extrabold text-lg text-blue-400" id="resTotalAnggota"></span></div>
+                                <div class="grid grid-cols-2 md:grid-cols-3 gap-3 pt-3">
+                                    <div class="bg-slate-800 p-2 rounded-lg text-center"><p class="text-slate-400 text-xs">Level 1</p><p class="font-bold text-slate-200 text-base" id="resCountLv1"></p></div>
+                                    <div class="bg-slate-800 p-2 rounded-lg text-center"><p class="text-slate-400 text-xs">Level 2</p><p class="font-bold text-slate-200 text-base" id="resCountLv2"></p></div>
+                                    <div class="bg-slate-800 p-2 rounded-lg text-center"><p class="text-slate-400 text-xs">Level 3</p><p class="font-bold text-slate-200 text-base" id="resCountLv3"></p></div>
+                                    <div class="bg-slate-800 p-2 rounded-lg text-center"><p class="text-slate-400 text-xs">Level 4</p><p class="font-bold text-slate-200 text-base" id="resCountLv4"></p></div>
+                                    <div class="bg-slate-800 p-2 rounded-lg text-center"><p class="text-slate-400 text-xs">Level 5</p><p class="font-bold text-slate-200 text-base" id="resCountLv5"></p></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- PWA & UI Control Script (SUDAH DIPERBAIKI) ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const enterButton = document.getElementById('enter-button');
+            const splashScreen = document.getElementById('splash-screen');
+            const dashboardContent = document.getElementById('dashboard-content');
+            enterButton.addEventListener('click', () => {
+                const elem = document.documentElement;
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen().catch(err => { console.log(`Error: ${err.message}`); });
+                } else if (elem.webkitRequestFullscreen) { /* Safari */
+                    elem.webkitRequestFullscreen();
+                }
+                splashScreen.style.animation = 'fadeOut 0.5s ease-in forwards';
+                setTimeout(() => {
+                    splashScreen.style.display = 'none';
+                    dashboardContent.style.display = 'block';
+                    dashboardContent.style.animation = 'fadeIn 0.5s ease-out forwards';
+                    document.body.style.overflow = 'auto';
+                    initializeSimulator();
+                }, 500);
+            });
+            
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    // Path ke sw.js sudah diperbaiki
+                    navigator.serviceWorker.register('/BenefitPlan/sw.js').then(registration => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    }, err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+                });
+            }
+        });
+
+        // --- Original Dashboard Script (Tidak ada perubahan) ---
+        let anggotaLevels = [0, 0, 0, 0, 0];
+        let simulationMode = 'recruit_lv1'; 
+        let confettiInterval;
+        let animationFrameId;
+        function initializeSimulator() { renderControls(); updateSimulation(); }
+        function switchTab(tabName) { ['bonus', 'benefit', 'tim'].forEach(name => { const tab = document.getElementById(`tab-${name}`); const btn = document.getElementById(`btn-tab-${name}`); if (tab && btn) { tab.classList.add('hidden'); btn.classList.remove('active'); } }); const selectedTab = document.getElementById(`tab-${tabName}`); const selectedBtn = document.getElementById(`btn-tab-${tabName}`); if (selectedTab && selectedBtn) { selectedTab.classList.remove('hidden'); selectedBtn.classList.add('active'); } }
+        function activateDuplicationMode() { simulationMode = 'duplicating_lv1'; renderControls(); updateSimulation(); }
+        function growTeam(currentLevelIndex) { if (currentLevelIndex >= 4) return; anggotaLevels[currentLevelIndex + 1] = anggotaLevels[currentLevelIndex] * 5; updateSimulation(); }
+        function goBack(levelToRevertFrom) { if (levelToRevertFrom === 1) { simulationMode = 'recruit_lv1'; anggotaLevels = [5, 0, 0, 0, 0]; renderControls(); ['A', 'B', 'C', 'D', 'E'].forEach(l => {  const cb = document.getElementById(`member${l}`); if(cb) cb.checked = true;  }); updateSimulation(); } else { for (let i = levelToRevertFrom - 1; i < anggotaLevels.length; i++) { anggotaLevels[i] = 0; } updateSimulation(); } }
+        function handleCheckboxChange() { let count = 0; ['A', 'B', 'C', 'D', 'E'].forEach(letter => { if (document.getElementById(`member${letter}`).checked) { count++; } }); if (simulationMode === 'recruit_lv1') { anggotaLevels[0] = count; } else if (simulationMode === 'duplicating_lv1') { anggotaLevels[1] = count * 5; } updateSimulation(); }
+        function renderControls() { const container = document.getElementById('controls-body'); const members = ['A', 'B', 'C', 'D', 'E']; let labelText = "Anggota Tim Anda"; let checkboxBaseStyle = "bg-slate-800 border-slate-700 text-slate-300"; let checkboxCheckedStyle = "peer-checked:bg-indigo-600 peer-checked:text-white peer-checked:border-indigo-500"; if (simulationMode === 'duplicating_lv1') { labelText = "Pilih Ketua Tim Baru"; checkboxBaseStyle = "bg-indigo-900/50 border-indigo-700 text-indigo-300"; checkboxCheckedStyle = "peer-checked:bg-amber-400 peer-checked:text-white peer-checked:border-amber-400"; anggotaLevels[1] = 0; } let checkboxHTML = members.map(letter => ` <div> <input type="checkbox" id="member${letter}" class="hidden peer" onchange="handleCheckboxChange()"> <label for="member${letter}" class="block cursor-pointer p-2 text-center rounded-lg border ${checkboxBaseStyle} ${checkboxCheckedStyle} font-bold transition text-sm">${letter}</label> <div id="kt-label-${letter}" class="text-center h-4 mt-1"></div> </div> `).join(''); container.innerHTML = ` <div class="input-group"> <label class="block mb-2 font-medium text-slate-400 text-sm">${labelText}</label> <div class="grid grid-cols-5 gap-1.5"> ${checkboxHTML} </div> </div> <div id="subsequent-levels-container"></div> `; updateSimulation(); }
+        const confettiCanvas = document.getElementById('confetti-canvas'); const confettiCtx = confettiCanvas.getContext('2d'); let confettiPieces = []; const confettiColors = ['#fde68a', '#facc15', '#eab308', '#d97706'];
+        function startConfetti() { if (confettiInterval) return; confettiCanvas.style.display = 'block'; confettiCanvas.width = window.innerWidth; confettiCanvas.height = window.innerHeight; confettiInterval = setInterval(() => { for (let i = 0; i < 20; i++) { createConfetti(); } }, 500); animateConfetti(); }
+        function stopConfetti() { if (!confettiInterval) return; clearInterval(confettiInterval); confettiInterval = null; cancelAnimationFrame(animationFrameId); setTimeout(() => { if (confettiCanvas) { confettiCanvas.style.display = 'none'; confettiPieces = []; } }, 3000); }
+        function createConfetti() { confettiPieces.push({ x: Math.random() * confettiCanvas.width, y: -20, w: 5 + Math.random() * 10, h: 10 + Math.random() * 10, color: confettiColors[Math.floor(Math.random() * confettiColors.length)], rotation: Math.random() * 360, speedX: Math.random() * 4 - 2, speedY: 2 + Math.random() * 3, opacity: 1 }); }
+        function animateConfetti() { animationFrameId = requestAnimationFrame(animateConfetti); confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height); confettiPieces.forEach((piece, index) => { piece.y += piece.speedY; piece.x += piece.speedX; piece.rotation += piece.speedX; piece.opacity -= 0.005; if (piece.y > confettiCanvas.height || piece.opacity <= 0) { confettiPieces.splice(index, 1); } confettiCtx.save(); confettiCtx.translate(piece.x, piece.y); confettiCtx.rotate(piece.rotation * Math.PI / 180); confettiCtx.globalAlpha = piece.opacity; confettiCtx.fillStyle = piece.color; confettiCtx.fillRect(-piece.w / 2, -piece.h / 2, piece.w, piece.h); confettiCtx.restore(); }); }
+        function updateSimulation() { const depositAwal = 100; const totalAnggotaTim = anggotaLevels.reduce((a, b) => a + b, 0); const totalAnggota = totalAnggotaTim + 1;  const bonusReveralLv1 = anggotaLevels[0] * (0.05 * 100); const bonusReveralLv2 = anggotaLevels[1] * (0.02 * 100); const bonusTim = anggotaLevels[0] >= 5 ? 20 : 0; let bonusPeringkatForDisplay = 0; let cumulativeBonusPeringkat = 0; if (anggotaLevels[0] >= 5) { cumulativeBonusPeringkat += 50; } if (totalAnggota >= 31) { cumulativeBonusPeringkat += 100; } if (totalAnggota >= 101) { cumulativeBonusPeringkat += 200; } if (totalAnggota >= 201) { cumulativeBonusPeringkat += 400; } if (totalAnggota >= 351) { cumulativeBonusPeringkat += 600; } if (totalAnggota >= 501) { cumulativeBonusPeringkat += 1000; } if (totalAnggota >= 901) { cumulativeBonusPeringkat += 2000; } if (totalAnggota >= 1601) { cumulativeBonusPeringkat += 3000; } if (totalAnggota >= 3501) { cumulativeBonusPeringkat += 5000; } let status = "Anggota", statusColor = "bg-yellow-400/20 text-yellow-300"; if (totalAnggota >= 3501) { status = "LV 9"; statusColor = "bg-violet-400/20 text-violet-300"; bonusPeringkatForDisplay = 5000;} else if (totalAnggota >= 1601) { status = "LV 8"; statusColor = "bg-violet-400/20 text-violet-300"; bonusPeringkatForDisplay = 3000;} else if (totalAnggota >= 901) { status = "LV 7"; statusColor = "bg-indigo-400/20 text-indigo-300"; bonusPeringkatForDisplay = 2000;} else if (totalAnggota >= 501) { status = "LV 6"; statusColor = "bg-indigo-400/20 text-indigo-300"; bonusPeringkatForDisplay = 1000;} else if (totalAnggota >= 351) { status = "VIP 5"; statusColor = "bg-blue-400/20 text-blue-300"; bonusPeringkatForDisplay = 600;} else if (totalAnggota >= 201) { status = "VIP 4"; statusColor = "bg-blue-400/20 text-blue-300"; bonusPeringkatForDisplay = 400;} else if (totalAnggota >= 101) { status = "VIP 3"; statusColor = "bg-cyan-400/20 text-cyan-300"; bonusPeringkatForDisplay = 200;} else if (totalAnggota >= 31) { status = "VIP 2"; statusColor = "bg-cyan-400/20 text-cyan-300"; bonusPeringkatForDisplay = 100;} else if (anggotaLevels[0] >= 5) { status = "VIP 1"; statusColor = "bg-emerald-400/20 text-emerald-300"; bonusPeringkatForDisplay = 50;} const totalBonus = bonusReveralLv1 + bonusReveralLv2 + bonusTim + cumulativeBonusPeringkat; const saldoAkun = depositAwal + totalBonus; const leadersInLv1 = Math.floor(anggotaLevels[1] / 5); let batasanModal; if (anggotaLevels[0] < 5) { batasanModal = 300 + (anggotaLevels[0] * 30); } else { let currentLimit = 450; if (simulationMode === 'duplicating_lv1' || anggotaLevels[1] > 0) { if (anggotaLevels[1] === 25) { currentLimit = 450 + 2700; if (anggotaLevels[2] === 125) { currentLimit = 450 + (2700 * 5); if (anggotaLevels[3] === 625) { currentLimit = 450 + (13950 * 5); if (anggotaLevels[4] === 3125) { currentLimit = 450 + (69750 * 5); } } } } else { currentLimit = 450 + (leadersInLv1 * 450); } } batasanModal = currentLimit; } let sinyalKe3 = "Tidak Aktif"; if (anggotaLevels[0] >= 5) { if (leadersInLv1 === 5) sinyalKe3 = "Permanen"; else if (leadersInLv1 === 4) sinyalKe3 = "25 Hari"; else if (leadersInLv1 === 3) sinyalKe3 = "20 Hari"; else if (leadersInLv1 === 2) sinyalKe3 = "15 Hari"; else if (leadersInLv1 === 1) sinyalKe3 = "10 Hari"; else sinyalKe3 = "5 Hari"; } let sinyalKe4 = "Belum Aktif"; if (anggotaLevels[1] > 0) { sinyalKe4 = "10 Hari"; } let bonusVolume = "0%"; if (totalAnggota >= 5 && totalAnggota <= 30) { bonusVolume = "0.3%"; } else if (totalAnggota >= 31 && totalAnggota <= 100) { bonusVolume = "0.5%"; } else if (totalAnggota >= 101 && totalAnggota <= 200) { bonusVolume = "1%"; } else if (totalAnggota >= 201 && totalAnggota <= 350) { bonusVolume = "1.5%"; } else if (totalAnggota >= 351 && totalAnggota <= 500) { bonusVolume = "2%"; } else if (totalAnggota >= 501 && totalAnggota <= 900) { bonusVolume = "2.5%"; } else if (totalAnggota >= 901 && totalAnggota <= 1600) { bonusVolume = "3%"; } else if (totalAnggota >= 1601 && totalAnggota <= 3500) { bonusVolume = "3.5%"; } else if (totalAnggota >= 3501) { bonusVolume = "5%"; } if (status === "LV 9") { startConfetti(); } else { stopConfetti(); } const andaLabel = document.getElementById('anda-label'); const ketuaTimLabel = document.getElementById('ketua-tim-label'); const crownIcon = document.getElementById('crown-icon'); if (anggotaLevels[0] === 5) { andaLabel.classList.remove('bg-indigo-100', 'text-indigo-800', 'bg-blue-200', 'text-blue-800'); andaLabel.classList.add('bg-amber-400/20', 'text-amber-300'); ketuaTimLabel.innerHTML = `<span class="text-xs font-bold text-emerald-400">Ketua Tim</span>`; if(crownIcon) crownIcon.classList.remove('hidden'); } else { andaLabel.classList.remove('bg-amber-400/20', 'text-amber-300'); andaLabel.classList.add('bg-indigo-100', 'text-indigo-800'); ketuaTimLabel.innerHTML = ''; if(crownIcon) crownIcon.classList.add('hidden'); } if (simulationMode === 'duplicating_lv1') { ['A', 'B', 'C', 'D', 'E'].forEach(letter => { const ktLabel = document.getElementById(`kt-label-${letter}`); if (document.getElementById(`member${letter}`).checked) { ktLabel.innerHTML = `<span class="text-xs font-bold text-amber-400">KT</span>`; } else { ktLabel.innerHTML = ''; } }); } const subsequentContainer = document.getElementById('subsequent-levels-container'); if(subsequentContainer){ subsequentContainer.innerHTML = ''; if (simulationMode === 'recruit_lv1' && anggotaLevels[0] === 5) { subsequentContainer.innerHTML = ` <div class="mt-4 pt-4 border-t border-slate-700"> <button class="action-button w-full flex items-center justify-center p-2 font-semibold text-white rounded-lg transition text-sm" onclick="activateDuplicationMode()"> <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor"><path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" /></svg> Duplikasikan Tim </button> </div>`; } else if (simulationMode === 'duplicating_lv1') { subsequentContainer.innerHTML += ` <div class="mt-4 pt-4 border-t border-slate-700"> <div class="flex justify-between items-center mb-3"> <span class="font-medium text-slate-400 text-sm">Anggota Lv. 2</span> <span class="font-bold text-base text-indigo-400">${anggotaLevels[1].toLocaleString('id-ID')}</span> </div> <button class="back-button w-full flex items-center justify-center p-2 font-semibold rounded-lg transition text-sm" onclick="goBack(1)">Kembali</button> </div>`; for (let i = 1; i < 4; i++) { if (anggotaLevels[i] > 0 && anggotaLevels[i+1] === 0) { subsequentContainer.innerHTML += ` <div class="mt-4 pt-4 border-t border-slate-700"> <div class="flex justify-between items-center mb-3"> <span class="font-medium text-slate-400 text-sm">Anggota Lv. ${i + 2}</span> <span class="font-bold text-base text-indigo-400">${anggotaLevels[i + 1].toLocaleString('id-ID')}</span> </div> <div class="flex space-x-2"> <button class="back-button w-1/3 flex items-center justify-center p-2 font-semibold rounded-lg transition text-sm" onclick="goBack(${i+1})">Kembali</button> <button class="action-button w-2/3 flex items-center justify-center p-2 font-semibold text-white rounded-lg transition text-sm" onclick="growTeam(${i})">Duplikasikan</button> </div> </div>`; } else if (anggotaLevels[i] > 0) { subsequentContainer.innerHTML += ` <div class="mt-4 pt-4 border-t border-slate-700"> <div class="flex justify-between items-center"> <span class="font-medium text-slate-400 text-sm">Anggota Lv. ${i + 2}</span> <span class="font-bold text-base text-indigo-400">${anggotaLevels[i + 1].toLocaleString('id-ID')}</span> </div> </div>`; } } } } document.getElementById('kpiTotalBonus').textContent = `+${totalBonus.toLocaleString('id-ID')} USDT`; document.getElementById('kpiStatus').innerHTML = `<span class="px-2 py-1 rounded-full font-bold text-xs ${statusColor}">${status}</span>`; document.getElementById('kpiBonusPeringkat').textContent = bonusPeringkatForDisplay > 0 ? `+${bonusPeringkatForDisplay.toLocaleString('id-ID')} USDT` : ''; document.getElementById('resBonusVolume').textContent = bonusVolume; document.getElementById('resModalAwalPanel').textContent = `${saldoAkun.toLocaleString('id-ID')} USDT`; document.getElementById('resBonusReveral1').textContent = `+ ${bonusReveralLv1.toLocaleString('id-ID')} USDT`; document.getElementById('resBonusReveral2').textContent = `+ ${bonusReveralLv2.toLocaleString('id-ID')} USDT`; document.getElementById('resBonusTim').textContent = `+ ${bonusTim.toLocaleString('id-ID')} USDT`; document.getElementById('resBatasanModal').textContent = `${batasanModal.toLocaleString('id-ID')} USDT`; const check = `<svg class="inline-block h-5 w-5 mr-3 text-emerald-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>`; const cross = `<svg class="inline-block h-5 w-5 mr-3 text-slate-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>`; document.getElementById('resSinyal').innerHTML = ` <div class="flex items-center text-slate-300">${check}<span>Sinyal Siang & Malam</span></div> <div class="flex items-center text-slate-300">${sinyalKe3 !== 'Tidak Aktif' ? check : cross}<span>Sinyal ke-3: <strong class="ml-2 font-semibold text-slate-200">${sinyalKe3}</strong></span></div> <div class="flex items-center text-slate-300">${sinyalKe4 !== 'Belum Aktif' ? check : cross}<span>Sinyal ke-4: <strong class="ml-2 font-semibold text-slate-200">${sinyalKe4}</strong></span></div> `; document.getElementById('resTotalAnggota').textContent = `${totalAnggotaTim.toLocaleString('id-ID')} Anggota`; document.getElementById('resCountLv1').textContent = anggotaLevels[0].toLocaleString('id-ID'); document.getElementById('resCountLv2').textContent = anggotaLevels[1].toLocaleString('id-ID'); document.getElementById('resCountLv3').textContent = anggotaLevels[2].toLocaleString('id-ID'); document.getElementById('resCountLv4').textContent = anggotaLevels[3].toLocaleString('id-ID'); document.getElementById('resCountLv5').textContent = anggotaLevels[4].toLocaleString('id-ID'); }
+    </script>
+</body>
+</html>
