@@ -1,0 +1,22 @@
+{
+  "name": "DVTEAM NP Benefit Plan Simulator",
+  "short_name": "DVTEAM NP",
+  "description": "Alat bantu visual untuk merencanakan strategi dan memaksimalkan potensi pertumbuhan tim Anda.",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#020617",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "images/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "images/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
