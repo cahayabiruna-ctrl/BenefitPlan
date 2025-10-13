@@ -1,11 +1,11 @@
 const CACHE_NAME = 'dvteam-dashboard-v1';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/images/logo-splash.png',
-  '/images/icon-192.png',
-  '/images/icon-512.png',
+  '/BenefitPlan/',
+  '/BenefitPlan/index.html',
+  '/BenefitPlan/manifest.json',
+  '/BenefitPlan/images/logo-splash.png',
+  '/BenefitPlan/images/icon-192.png',
+  '/BenefitPlan/images/icon-512.png',
   'https://cdn.tailwindcss.com',
   'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap'
 ];
